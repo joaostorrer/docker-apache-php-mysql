@@ -1,0 +1,39 @@
+version: '3.7'
+
+networks:
+  frontend:
+  backend:
+
+services:
+  php:
+    build:
+      context: ./www
+    container_name: php
+    depends_on:
+      - mysql
+    env_file:
+      - ./environment.env
+    labels:
+      com.example.description: "Servidor PHP + Apache"
+    networks:
+      - backend
+      - frontend
+    ports:
+      - 8080:80
+    restart: always
+    volumes:
+      - ./src:/var/www/html
+
+  mysql:
+    build:
+      context: ./db
+    container_name: mysql
+    env_file:
+      - ./environment.env
+    labels:
+      com.example.description: "Servidor MySQL"
+    networks:
+      - backend
+    ports:
+      - 3306:3306
+    restart: always
